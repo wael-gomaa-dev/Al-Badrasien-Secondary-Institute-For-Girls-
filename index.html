@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>البوابة الرقمية - معهد فتيات البدرشين الإعدادي الثانوي</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Tahoma, Arial, sans-serif; background: #f4f7f5; color: #333; line-height: 1.6; }
+    
+    .top-bar { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: #fff; padding: 20px 15px; text-align: center; border-bottom: 4px solid #c59b27; }
+    .azhar-badge { font-size: 13px; color: #ffeb3b; font-weight: bold; margin-bottom: 5px; }
+    .portal-title { font-size: 22px; font-weight: bold; margin-bottom: 4px; }
+    .sub-title { font-size: 14px; opacity: 0.9; }
+    .admin-info { margin-top: 10px; font-size: 13px; background: rgba(0,0,0,0.2); display: inline-block; padding: 5px 15px; border-radius: 20px; }
+
+    .nav-tabs { display: flex; justify-content: center; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; flex-wrap: wrap; }
+    .tab-btn { padding: 14px 18px; border: none; background: none; font-family: inherit; font-size: 14px; font-weight: bold; color: #555; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
+    .tab-btn:hover { color: #1b5e20; background: #f9fbf9; }
+    .tab-btn.active { color: #1b5e20; border-bottom: 3px solid #1b5e20; background: #e8f5e9; }
+
+    .container { max-width: 650px; margin: 20px auto; padding: 0 15px; }
+    .section { display: none; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); animation: fadeIn 0.3s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    h3 { color: #1b5e20; margin-bottom: 15px; border-right: 4px solid #c59b27; padding-right: 10px; font-size: 18px; }
+
+    input[type="text"], select { width: 100%; padding: 12px; margin: 10px 0 15px 0; border: 2px solid #c8e6c9; border-radius: 8px; font-size: 15px; font-family: inherit; text-align: center; }
+    input[type="text"]:focus, select:focus { border-color: #1b5e20; outline: none; }
+    .student-card { background: #f1f8e9; border: 1px solid #c8e6c9; border-right: 5px solid #1b5e20; padding: 15px; border-radius: 8px; margin-top: 12px; text-align: right; line-height: 1.9; }
+    .error-msg { color: #c62828; text-align: center; font-weight: bold; margin-top: 10px; }
+
+    .news-item { border-bottom: 1px solid #eee; padding: 12px 0; }
+    .news-item:last-child { border-bottom: none; }
+    .news-date { font-size: 12px; color: #888; }
+    .news-title { font-weight: bold; color: #1b5e20; margin: 3px 0; }
+
+    .coming-soon { text-align: center; padding: 30px 10px; }
+    .badge-soon { background: #fff8e1; color: #b78a28; border: 1px solid #ffe082; padding: 6px 16px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
+
+    .footer { text-align: center; margin: 30px 0 20px; font-size: 13px; color: #666; line-height: 1.8; }
+    .dev-credit { color: #1b5e20; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="azhar-badge">الأزهر الشريف - منطقة الجيزة الأزهرية</div>
+    <div class="portal-title">البوابة الرقمية لمعهد فتيات البدرشين</div>
+    <div class="sub-title">المرحلة الإعدادية والثانوية | العام الدراسي 2026 / 2027</div>
+    <div class="admin-info">عميدة المعهد: أ. مروة إدريس</div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="openTab('seats', this)">أرقام الجلوس</button>
+    <button class="tab-btn" onclick="openTab('schedules', this)">الجداول</button>
+    <button class="tab-btn" onclick="openTab('news', this)">لوحة الإعلانات</button>
+    <button class="tab-btn" onclick="openTab('results', this)">النتائج (قريباً)</button>
+  </div>
+
+  <div class="container">
+
+    <div id="seats" class="section active">
+      <h3>الاستعلام عن أرقام الجلوس واللجان</h3>
+      <p style="font-size: 14px; color: #555;">اكتبي 3 حروف على الأقل من اسم الطالبة للبحث الفوري:</p>
+      <input type="text" id="searchInput" placeholder="اكتبي اسم الطالبة هنا..." onkeyup="liveSearch()">
+      <div id="searchResults"></div>
+    </div>
+
+    <div id="schedules" class="section">
+      <h3>جداول الحصص والامتحانات</h3>
+      <p style="font-size: 14px; color: #555;">اختاري الصف الدراسي والشعبة لعرض الجدول المعتمد:</p>
+      <select id="gradeSelect" onchange="showSchedule()">
+        <option value="">-- اختاري الصف الدراسي والشعبة --</option>
+        <option value="prep1">الصف الأول الإعدادي</option>
+        <option value="prep2">الصف الثاني الإعدادي</option>
+        <option value="prep3">الصف الثالث الإعدادي</option>
+        <option value="sec1">الصف الأول الثانوي</option>
+        <option value="sec2_sci">الصف الثاني الثانوي (علمي)</option>
+        <option value="sec2_lit">الصف الثاني الثانوي (أدبي)</option>
+      </select>
+      <div id="scheduleDisplay"></div>
+    </div>
+
+    <div id="news" class="section">
+      <h3>أحدث إعلانات وتعليمات المعهد</h3>
+      <div class="news-item">
+        <div class="news-date">تحديث إداري</div>
+        <div class="news-title">تعليمات دخول لجان الامتحانات</div>
+        <p style="font-size: 14px;">يرجى التواجد بفناء المعهد قبل بدء اللجنة بنصف ساعة مع الالتزام بالزي الأزهري وإحضار الأدوات الشخصية كاملة.</p>
+      </div>
+      <div class="news-item">
+        <div class="news-date">شئون الطالبات</div>
+        <div class="news-title">تحديث بيانات الطالبات</div>
+        <p style="font-size: 14px;">على جميع الطالبات التأكد من مطابقة الاسم الرباعي ورقم الجلوس عبر البوابة، ومراجعة إدارة شئون الطالبات في حال وجود أي ملاحظة.</p>
+      </div>
+    </div>
+
+    <div id="results" class="section">
+      <div class="coming-soon">
+        <div class="badge-soon">قريباً فور اعتماد النتائج</div>
+        <h3 style="border: none; padding: 0;">بوابة إعلان نتائج الامتحانات</h3>
+        <p style="color: #666; font-size: 14px; margin-top: 10px;">سيتم تفعيل الاستعلام الإلكتروني عن درجات الفصل الدراسي الأول فور انتهاء أعمال التصحيح والمراجعة واعتمادها رسمياً.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div>معهد فتيات البدرشين الإعدادي الثانوي - جميع الحقوق محفوظة © 2026</div>
+    <div>تصميم وتطوير النظام: <span class="dev-credit">أ. وائل جمعة</span></div>
+  </div>
+
+  <script>
+    function openTab(tabId, btn) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // بيانات الطالبات
+    const students = [
+      // امسح هذا السطر والصق بيانات الطالبات من العمود E في الإكسل
+    ];
+
+    function normalize(text) {
+      return text.replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').trim();
+    }
+
+    function liveSearch() {
+      const query = normalize(document.getElementById("searchInput").value);
+      const resultsDiv = document.getElementById("searchResults");
+      resultsDiv.innerHTML = "";
+      if (query.length < 3) return;
+
+      const matches = students.filter(s => normalize(s.name).includes(query));
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = '<div class="error-msg">لا توجد طالبة بهذا الاسم. تأكدي من كتابة الاسم بشكل صحيح.</div>';
+        return;
+      }
+
+      matches.forEach(s => {
+        resultsDiv.innerHTML += `
+          <div class="student-card">
+            <div><strong>اسم الطالبة:</strong> ${s.name}</div>
+            <div><strong>رقم الجلوس:</strong> ${s.seat}</div>
+            <div><strong>رقم اللجنة:</strong> ${s.room}</div>
+            <div><strong>الدور:</strong> ${s.floor}</div>
+          </div>
+        `;
+      });
+    }
+
+    // بيانات الجداول بالصور بصيغة jpeg
+    const schedulesData = {
+      prep1: `
+        <img src="prep1.jpeg" alt="جدول الصف الأول الإعدادي" style="width:100%; border-radius:8px; border:2px solid #c8e6c9; margin-top:10px;">
+        <a href="prep1.jpeg" download="جدول_الاول_الاعدادي" style="display:inline-block; margin-top:10px; background:#1b5e20; color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:14px;">تحميل الجدول كصورة</a>
+      `,
+      prep2: `
+        <img src="prep2.jpeg" alt="جدول الصف الثاني الإعدادي" style="width:100%; border-radius:8px; border:2px solid #c8e6c9; margin-top:10px;">
+        <a href="prep2.jpeg" download="جدول_الثاني_الاعدادي" style="display:inline-block; margin-top:10px; background:#1b5e20; color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:14px;">تحميل الجدول كصورة</a>
+      `,
+      prep3: `
+        <img src="prep3.jpeg" alt="جدول الصف الثالث الإعدادي" style="width:100%; border-radius:8px; border:2px solid #c8e6c9; margin-top:10px;">
+        <a href="prep3.jpeg" download="جدول_الثالث_الاعدادي" style="display:inline-block; margin-top:10px; background:#1b5e20; color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:14px;">تحميل الجدول كصورة</a>
+      `,
+      sec1: `
+        <img src="sec1.jpeg" alt="جدول الصف الأول الثانوي" style="width:100%; border-radius:8px; border:2px solid #c8e6c9; margin-top:10px;">
+        <a href="sec1.jpeg" download="جدول_الاول_الثانوي" style="display:inline-block; margin-top:10px; background:#1b5e20; color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:14px;">تحميل الجدول كصورة</a>
+      `,
+      sec2_sci: `
+        <img src="sec2-sci.jpeg" alt="جدول الصف الثاني الثانوي علمي" style="width:100%; border-radius:8px; border:2px solid #c8e6c9; margin-top:10px;">
